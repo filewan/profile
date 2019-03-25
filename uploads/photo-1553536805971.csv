@@ -1,0 +1,5 @@
+event_name,user_id,event_time,Marax Segment name,Sub Category First Preference,Sub Category Second Preference,Days since First billed,Days since Last billed,Churn risk,Total lifetime spend,Current wallet balance,Last recharge amount,Number of orders in past 30 days,Number of Active Subscriptions
+MARAX SEGMENT,cef35049-64c8-452c-86f0-4a119c146b14,2018-09-15 23:23:21,low_risk,Milk,Vegetables,321,9,29.4547885656,23005,354,1500,22,2
+MARAX SEGMENT,13ca5ec6-dcd3-4159-ac64-85887e4cd2df,2018-09-15 23:23:21,low_risk,Milk,,508,9,10.6343656778,9223,321,0,22,12
+MARAX SEGMENT,9f8e9a44-4e9f-4401-aa6f-d26a955f6bed,2018-09-15 23:23:21,low_risk,Vegetables,Fruits,302,6,26.2109488249,16817.75,443,1500,7,0
+MARAX SEGMENT,0a7e4673-9145-47d3-9b99-77c261a510cf,2018-09-15 23:23:21,low_risk,Milk,Bread & Rusk,100,6,33.6841285229,2440,369,2500,10,0
