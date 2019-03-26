@@ -9,7 +9,7 @@
       "expiry": 86400
     },
     "db": {
-      "host": "mongodb://mongo/Authentication",
+      "host": "mongodb://mongo/Profile",
       "port": 27017,
       "reconnectInterval": 5000
     }
