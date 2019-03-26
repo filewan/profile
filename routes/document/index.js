@@ -38,7 +38,7 @@ let storage = multer.diskStorage({
       cb(null, DIR);
     },
     filename: (req, file, cb) => {
-      name = file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+      name = file.originalname.split('.')[0] + '-' + Date.now() + path.extname(file.originalname)
       cb(null, name);
     }
 });
@@ -73,25 +73,72 @@ router.post('/upload', upload.single('photo'), async(req, res) => {
     
       } else {
         console.log('file received');
-        await gsStorage.bucket(bucketName).upload(`./uploads/${name}`, {
-            // Support for HTTP requests made with `Accept-Encoding: gzip`
-            gzip: true,
-            metadata: {
-              // Enable long-lived HTTP caching headers
-              // Use only if the contents of the file will never change
-              // (If the contents will change, use cacheControl: 'no-cache')
-              cacheControl: 'public, max-age=31536000',
-            },
-          });
-        
-          console.log(`${name} uploaded to ${bucketName}.`);
-        // uploadUtil.uploadFile('', name);
-        return res.send({
-          success: true
-        })
+        try {
+            await gsStorage.bucket(bucketName).upload(`./uploads/${name}`, {
+                // Support for HTTP requests made with `Accept-Encoding: gzip`
+                gzip: true,
+                metadata: {
+                  // Enable long-lived HTTP caching headers
+                  // Use only if the contents of the file will never change
+                  // (If the contents will change, use cacheControl: 'no-cache')
+                  cacheControl: 'public, max-age=31536000',
+                },
+              });
+              Profile.findOneAndUpdate({pan: req.body.pan}, {$push: {documents: {type: req.body.filetype, path: name}}}, (err, doc) => {
+                if (doc) {
+                    res.json({
+                        success: false,
+                        doc,
+                      });
+                } else {
+                    res.json({
+                        success: false,
+                        error: 'Error happened during upload'
+                      });
+                }
+              });
+              console.log(`${name} uploaded to ${bucketName}.`);
+        }
+        catch(err) {
+            return res.json({
+                success: false,
+                error: 'Error happened during upload',
+                details: err,
+              })
+        }
       }
     });
     
+    router.get('/download', async(req,res) => {
+      const srcFilename = req.query.f;
+      const options = {
+        // The path to which the file should be downloaded, e.g. "./file.txt"
+        destination: `./downloads/${srcFilename}`,
+      };
+      try {
+        await gsStorage
+        .bucket(bucketName)
+        .file(srcFilename)
+        .download(options);
+
+        console.log(
+        `gs://${bucketName}/${srcFilename} downloaded to ./downloads/${srcFilename}.`
+        );
+        res.download(path.join(__dirname, `../../downloads/${srcFilename}`));
+      }
+      catch(err) {
+        console.log(err);
+        if (err.code == 'CONTENT_DOWNLOAD_MISMATCH') {
+          res.download(path.join(__dirname, `../../downloads/${srcFilename}`));
+        } else {
+          res.status(500).json({
+            success:false,
+            error: err,
+          });
+        }
+      }
+      
+    });
 //   const pan = req.body.pan;
 //   if (pan) {
 //     Profile.findOneAndUpdate({pan}, {$set: req.body}, (err, doc) => {
@@ -125,7 +172,6 @@ router.post('/get', (req, res) => {
       if (err) {
         res.status(500).json(err);
       } else {
-        console.log("inside,", doc)
         if (doc) {
           res.json({
             success: true,

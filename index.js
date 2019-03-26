@@ -13,17 +13,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 // app.use(cors());
-app.use(function (req, res, next) {
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Methods', 'POST');
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-      res.setHeader('Access-Control-Allow-Credentials', true);
-      next();
-    });
+// app.use(function (req, res, next) {
+//       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+//       res.setHeader('Access-Control-Allow-Methods', 'POST');
+//       res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//       res.setHeader('Access-Control-Allow-Credentials', true);
+//       next();
+//     });
 
 initializeDb((db) => { // eslint-disable-line no-unused-vars
-  app.use('/profile', profile);
-  app.use('/document', document);
+  app.use('/profile',cors(), profile);
+  app.use('/document', function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+  }, document);
   // app.use(bodyParser.urlencoded({ extended: false }));
   app.get('/', (req, res) => {
     res.json({
