@@ -53,6 +53,19 @@ router.patch('/update', (req, res) => {
   
 });
 
+router.post('/type', (req, res) => {
+  Profile.find().distinct('documents.type', (err, doc) => {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+        res.json({
+          success: true,
+          types: doc,
+        });
+    }
+  });
+});
+
 router.post('/get', (req, res) => {
   const pan = req.body.pan;
   console.log('')

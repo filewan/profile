@@ -162,8 +162,7 @@ router.post('/upload', upload.single('photo'), async(req, res) => {
 //     res.status(400).json({success: false,
 //     error: 'No pan details in request'});
 //   }
-  
-
+ 
 router.post('/get', (req, res) => {
   const pan = req.body.pan;
   console.log('')

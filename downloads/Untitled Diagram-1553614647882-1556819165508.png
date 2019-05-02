@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pilot | Filewan</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+</head>
+<body>
+  <app-root></app-root>
+<script type="text/javascript" src="runtime.ebecece0ba959d1ec893.js"></script><script type="text/javascript" src="polyfills.1f74d0d8437ca1cd6aa7.js"></script><script type="text/javascript" src="styles.1dbb729def24818f4152.js"></script><script type="text/javascript" src="scripts.e611bf743f88e3c9ed67.js"></script><script type="text/javascript" src="main.2100c4f9f7f4f0a8814a.js"></script></body>
+</html>

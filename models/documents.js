@@ -6,5 +6,18 @@ mongoose.Promise = global.Promise;
 module.exports = mongoose.model('Document', new Schema({
   type: { type: String, index: true, },
   path: String,
-  time: Schema.Types.Mixed,
+  issuedate: { type:
+    {
+      day: { type: Number, index: true, default: null},
+      month: { type: String, index: true, },
+      year: { type: Number, index: true}
+    }, default: null
+  },
+  expirydate: { type:
+    {
+      day: { type: Number, index: true, default: null},
+      month: { type: String, index: true, },
+      year: { type: Number, index: true}
+    }, default: null
+  }
 }, { collection: 'Document' }));
