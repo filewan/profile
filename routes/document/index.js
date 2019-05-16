@@ -10,6 +10,7 @@ const multer = require('multer');
 const router = new express.Router();
 const {Storage} = require('@google-cloud/storage');
 const publicKey = fs.readFileSync('config/jwtRS256.key.pub');
+const moment = require('moment');
 
 // router.use(enforceContentType({
 //   type: 'application/json',
@@ -84,13 +85,30 @@ router.post('/upload', upload.single('photo'), async(req, res) => {
                   cacheControl: 'public, max-age=31536000',
                 },
               });
-              Profile.findOneAndUpdate({pan: req.body.pan}, {$push: {documents: {type: req.body.filetype, path: name}}}, (err, doc) => {
+              let tempDoc = {documents: {type: req.body.filetype, path: name, expirydate: null, issuedate: null}};
+              if (req.body.issuedate) {
+                tempDoc.documents.issuedate = {
+                      day: Number(moment(req.body.issuedate).startOf('days').format('DD')),
+                      month: Number(moment(req.body.issuedate).startOf('days').format('MM')),
+                      year: Number(moment(req.body.issuedate).startOf('days').format('YYYY')),
+                  };
+              }
+              if (req.body.expirydate) {
+                tempDoc.documents.expirydate = {
+                  day: Number(moment(req.body.expirydate).startOf('days').format('DD')),
+                  month: Number(moment(req.body.expirydate).startOf('days').format('MM')),
+                  year: Number(moment(req.body.expirydate).startOf('days').format('YYYY')),
+              };
+              }
+
+              Profile.findOneAndUpdate({pan: req.body.pan}, {$push: tempDoc}, (err, doc) => {
                 if (doc) {
                     res.json({
                         success: false,
                         doc,
                       });
                 } else {
+                   console.log('err', err);
                     res.json({
                         success: false,
                         error: 'Error happened during upload'
@@ -100,6 +118,7 @@ router.post('/upload', upload.single('photo'), async(req, res) => {
               console.log(`${name} uploaded to ${bucketName}.`);
         }
         catch(err) {
+          console.log(err);
             return res.json({
                 success: false,
                 error: 'Error happened during upload',

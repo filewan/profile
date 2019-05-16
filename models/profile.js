@@ -12,7 +12,20 @@ module.exports = mongoose.model('Profile', new Schema({
   documents: [{
     type: { type: String, index: true, },
     path: String,
-    time: Schema.Types.Mixed,
+    issuedate: { type:
+      {
+        day: { type: Number, index: true, default: null},
+        month: { type: Number, index: true, },
+        year: { type: Number, index: true}
+      }, default: null
+    },
+    expirydate: { type:
+      {
+        day: { type: Number, index: true, default: null},
+        month: { type: Number, index: true, },
+        year: { type: Number, index: true}
+      }, default: null
+    }
   }],
 
 }, { collection: 'Profile' }));
